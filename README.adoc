@@ -254,13 +254,17 @@ image::usecase.svg[ここにみなさんが作成したユースケース図が�
 ==== 【演習】コマンドライン引数を取得する
 
 「 <<scr01>> 」をみると「蔵書管理アプリケーションは、蔵書の情報を保存しているファイルを実行時に指定できる」とあります。
-このことを実現するには、システムの実行時に、保存しているファイル名を受け取る方法が必要です。
+このことを実現するには、システムの実行時に、保存しているファイル名を受け取る方法が必要です（ <<exec_mybook>> ）。
 
+[[exec_mybook]]
+[example]
+--
 [source, console]
 ----
 app_develop> ruby mybook.rb mybook.db # <1>
 ----
 <1> `ruby` のプログラム `mybook.rb` を実行するときに、プログラムが `mybook.db`  を受け取る方法が必要。
+--
 
 このような、プログラムの実行時にプログラムへ渡すパラメータのことを「コマンドライン引数」といいます。
 Rubyでは、コマンドライン引数は `ARGV` という名前の「文字列の配列」に格納されています。
@@ -643,8 +647,66 @@ image::naibu_design_class01.svg[あらかじめ用意した内部設計のクラ
 
 プログラムが作成できたら、テストしましょう。
 
-まず、 `BookInfo` クラスや `BookInfoDB` クラスをテストします。
-うまく動作したら、 `MyBook` クラスや `main` 処理をテストしましょう。
+. まず、 `BookInfo` クラスや `BookInfoDB` クラスをテストします。
+. うまく動作したら、 `MyBook` クラスや `main` 処理をテストしましょう。
+
+`BookInfo` クラスや `BookInfoDB` クラスをテストするには、 `bookinfo.rb` ファイルの末尾に <<program_name_sec_rb>> のようなテスト用コードを追加します。
+
+[[program_name_sec_rb]]
+.【Ruby】 `bookinfo.rb` にテストコードを追加する
+[example]
+--
+[source,ruby,linenums]
+----
+
+# BookInfoクラス、BookInfoDBクラスの定義（省略）
+
+
+if $PROGRAM_NAME == __FILE__ # <1>
+  bookinfo1 = BookInfo.new('fujii2019', 'アフターデジタル', '藤井、尾原', 2019, '9784296101627')
+  bookinfo2 = BookInfo.new('udagawa2019', '他社と働く', '宇田川',  2019, '9784910063010')
+  info_db = BookInfoDB.new('bookinfo_test.db')
+  info_db.add(bookinfo1)
+  info_db.add(bookinfo2)
+
+  id = 'kuboaki2021'
+  puts "not found" unless info_db.exists?(id)
+
+  id = 'fujii2019'
+  puts 'found' if info_db.exists?(id)
+
+  info = info_db.fetch(id)
+  info.each_pair do |key, val|
+    puts "#{key}: #{val}"
+  end
+
+  list = info_db.list
+  p list
+
+  id = 'fujii2019'
+  info_db.delete(id)
+  puts 'not found' unless info_db.exists?(id)  
+
+  list = info_db.list
+  p list
+end
+----
+<1> 実行時ファイル名（ `$PROGRAM_NAME` ）がこのファイルの名前（ `__FILE__` ）と同じなら以下のブロックを実行する。そうでない（他のファイルからrequireされている）ときは実行しない。
+--
+
+そして、 <<bookinfo_test>>  のように実行すると、このテストコードが実行されます。
+また、この部分は、 `bookinfo.rb` が他のクラスから参照されている場合には無視されます。
+
+[[bookinfo_test]]
+.`bookinfo.rb` をテストする
+[example]
+--
+[source, console]
+----
+app_develop> ruby bookinfo.rb # <1>
+----
+<1> `bookinfo.rb` を直接実行すると、テストコードの部分が実行される。
+--
 
 
 == まとめ
