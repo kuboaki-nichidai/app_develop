@@ -257,6 +257,7 @@ image::usecase.svg[ここにみなさんが作成したユースケース図が�
 このことを実現するには、システムの実行時に、保存しているファイル名を受け取る方法が必要です（ <<exec_mybook>> ）。
 
 [[exec_mybook]]
+.叢書管理のアプリケーションを実行する
 [example]
 --
 [source, console]
@@ -356,7 +357,7 @@ include::{sourcesdir}/pstore_test.rb[]
 <5> 読み込み専用のときは true を指定する（誤って書き込なまいようにする）。
 --
 
-みなさんは、`codes` ディレクトリの <<pstore_sample01>> を実行し、その結果を <<argv01_exec_w>> に貼っておいてください。
+みなさんは、`codes` ディレクトリの <<pstore_sample01>> を実行し、その結果を <<pstore_sample01_exec_w>> に貼っておいてください。
 
 [[pstore_sample01_exec_w]]
 .【Console】 `pstore_test.rb` を実行する（みなさんの実行結果）
