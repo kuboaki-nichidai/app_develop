@@ -9,7 +9,7 @@ bookinfo3 = BookInfo.new('asai2019', '実践的ソフトウェア工学 第2版'
 
 dbfile = 'mybook.db'
 
-File.delete(dbfile)
+File.delete(dbfile) if File.exists?(dbfile)
 
 db = BookInfoDB.new(dbfile)
 db.add(bookinfo1)
